@@ -79,11 +79,30 @@ def read_poster(game):
 """)
 
 
+def insert_coin(game, game_number):
+    beat_flag = f"beat_game{game_number}"
+    lost_flag = f"lost_game{game_number}"
+    powered_flag = f"powered_game{game_number}"
+    if game.get(beat_flag):
+        say("This game has already been beaten. The machine stays powered off.")
+    elif game.get(powered_flag):
+        say("The machine is already powered on.")
+    else:
+        if game.get("coins", 0) < 1:
+            say("You need a coin to power the machine on.")
+            return
+        game.change("coins", -1)
+        game.set(lost_flag, False)
+        game.set(powered_flag)
+        say("You insert a coin. The machine powers on.")
+
+
 def load_game1(game):
-    if not game.get("beat_game1") and not game.get("lost_game1"):
+    if game.get("powered_game1") and not game.get("beat_game1"):
         flicker()
         static(0.5)
         result = make_game1()
+        game.set("powered_game1", False)
         if result:
             say("Congrats on beating the game!")
             game.set("beat_game1")
@@ -96,10 +115,11 @@ def load_game1(game):
 
 
 def load_game2(game):
-    if not game.get("beat_game2") and not game.get("lost_game2"):
+    if game.get("powered_game2") and not game.get("beat_game2"):
         flicker()
         static(0.5)
         result = make_game2()
+        game.set("powered_game2", False)
         if result:
             say("Congrats on beating the game!")
             game.set("beat_game2")
@@ -112,10 +132,11 @@ def load_game2(game):
 
 
 def load_game3(game):
-    if not game.get("beat_game3") and not game.get("lost_game3"):
+    if game.get("powered_game3") and not game.get("beat_game3"):
         flicker()
         static(0.5)
         result = make_game3()
+        game.set("powered_game3", False)
         if result:
             say("Congrats on beating the game!")
             game.set("beat_game3")
@@ -142,7 +163,7 @@ def main_game():
         "Haunted Arcade",
         start="arcade",
         subtitle="Play the games or suffer the consequences",
-        stats={"key": 0},
+        stats={"key": 0, "coins": 3},
     )
 
     game.add(
@@ -153,13 +174,11 @@ def main_game():
             "\nIn front of you are 3 old arcade machines.",
             text=lambda game: (
                 f"{game.get('key')} mini games beaten! \nThere's a door to the west you with a poster next to it."
-                "On the other walls are 3 old arcade machines."
+                "\nOn the other walls are 3 old arcade machines."
             ),
             options=[
-                Option("Walk out of the arcade", action=choose_ending),
-                # have text show
+                Option("Walk out of the arcade", "outside"),
                 Option("Look at the poster", action=read_poster),
-                # have each an unique minigame load
                 Option("Look at machine 1", "machine 1"),
                 Option("Look at machine 2", "machine 2"),
                 Option("Look at machine 3", "machine 3"),
@@ -175,7 +194,18 @@ def main_game():
             title="Machine 1",
             text=LUCK_INTRO,
             options=[
-                Option("Play the game", action=load_game1),
+                Option(
+                    "Insert a coin",
+                    action=lambda game: insert_coin(game, 1),
+                    condition=lambda game: not bool(game.get("powered_game1"))
+                    and not bool(game.get("beat_game1")),
+                ),
+                Option(
+                    "Play the game",
+                    action=load_game1,
+                    condition=lambda game: bool(game.get("powered_game1"))
+                    and not bool(game.get("beat_game1")),
+                ),
                 Option("Go Back", "arcade"),
             ],
         )
@@ -187,7 +217,18 @@ def main_game():
             title="Machine 2",
             text=SNAKE_INTRO,
             options=[
-                Option("Play the game", action=load_game2),
+                Option(
+                    "Insert a coin",
+                    action=lambda game: insert_coin(game, 2),
+                    condition=lambda game: not bool(game.get("powered_game2"))
+                    and not bool(game.get("beat_game2")),
+                ),
+                Option(
+                    "Play the game",
+                    action=load_game2,
+                    condition=lambda game: bool(game.get("powered_game2"))
+                    and not bool(game.get("beat_game2")),
+                ),
                 Option("Go Back", "arcade"),
             ],
         )
@@ -199,7 +240,18 @@ def main_game():
             title="Machine 3",
             text=SHOOTING_INTRO,
             options=[
-                Option("Play the game", action=load_game3),
+                Option(
+                    "Insert a coin",
+                    action=lambda game: insert_coin(game, 3),
+                    condition=lambda game: not bool(game.get("powered_game3"))
+                    and not bool(game.get("beat_game3")),
+                ),
+                Option(
+                    "Play the game",
+                    action=load_game3,
+                    condition=lambda game: bool(game.get("powered_game3"))
+                    and not bool(game.get("beat_game3")),
+                ),
                 Option("Go Back", "arcade"),
             ],
         )
@@ -220,9 +272,9 @@ def main_game():
         Scene(
             "outside",
             title="Outside",
-            text="Cold air. You made it out.[pause] Behind you, the door slowly closes on its own.",
-            # check inventory for items for what ending
-            ending="win",
+            text="Cold air. You made it outside.[pause] You hear a whispering voice behind you too unclear to make out.",
+            options=[Option("Continue", action=choose_ending),
+                     Option("Go back inside", "arcade")],
         )
     )
 

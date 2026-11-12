@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Room 13</title>
+  <link rel="icon" href="images/ghost.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nosifer&family=Special+Elite&family=VT323&family=IBM+Plex+Sans+Condensed:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/countdown.js" defer></script>
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="hero">
+      <div class="art"><img class="px" src="images/door.svg" alt="" width="132" height="156"></div>
+      <div class="title">
+        <div class="eyebrow">END-OF-QUARTER PROJECT 1</div>
+        <h1>ROOM 13</h1>
+        <div class="dates">THU 12 + FRI 13 NOV 2026</div>
+        <div class="countdown" id="countdown">ROOM 13 OPENS FRI 13 NOV, 15:00</div>
+      </div>
+      <div class="art"><img class="px" src="images/cabinet.svg" alt="" width="132" height="144"></div>
+    </header>
+
+    <nav class="jump" aria-label="Sections">
+      <a href="#quest">Your job</a>
+      <a href="#kit">Kit</a>
+      <a href="#paths">Paths</a>
+      <a href="#rules">Rules</a>
+      <a href="#sidequests">Side quests</a>
+      <a href="#days">Two days</a>
+      <a href="#opening">The Opening</a>
+      <a href="#handin">Hand in</a>
+    </nav>
+
+    <div class="intro">
+      <div>
+        <p>Last week the caretaker was clearing out the basement of the school. Behind a pile of broken chairs was a door. It isn't on any floor plan. The number on it says <b>13</b>.</p>
+        <p>There are no windows inside, only an old arcade cabinet. Nobody knows who built it. The power cable is cut, but at night the screen still glows. The caretaker wrote down the message it showed.</p>
+        <p>The next morning there was a dirty USB stick on the caretaker's desk, with a starter kit on it. Nobody has been back to the basement since.</p>
+        <p>That's where you come in. For two days, you and your team are a <b>crew</b> that stays after school. Your job is to build the game the cabinet asks for, before Friday the 13th is over. At the end of that day, the door of Room 13 opens and every crew shows their game at <b>The Opening</b>. Everyone votes, and the winning crew gets a prize. What it is? That's a surprise.</p>
+      </div>
+      <div>
+        <div class="crt" role="img" aria-label="The message on the cabinet screen">
+          <p>IT IS SO QUIET DOWN HERE.</p>
+          <p>NOBODY PLAYS WITH ME ANYMORE.</p>
+          <p class="blood">BRING ME A NEW GAME<br>ON FRIDAY THE 13TH.</p>
+          <p class="blood">OR I COME UP THE STAIRS.</p>
+          <p>MAKE IT SCARY. <span class="cursor"></span></p>
+        </div>
+        <div class="crt-caption">(caretaker's notes, 03:13 at night)</div>
+      </div>
+    </div>
+
+    <section id="quest">
+      <h2>YOUR JOB</h2>
+      <p class="section-lead">Build a horror game in Python. Two parts are required, the third is up to you:</p>
+      <div class="grid three">
+        <div class="box">
+          <div class="head"><h3>THE STORY</h3><img class="px" src="images/page.svg" alt="" width="28" height="24"></div>
+          <p class="tag-line">Required</p>
+          <p>A text adventure, with scenes, choices and at least one ending. It can be very simple: a few rooms that lead to your minigames is fine.</p>
+        </div>
+        <div class="box">
+          <div class="head"><h3>THE FEAR</h3><img class="px" src="images/ghost.svg" alt="" width="32" height="28"></div>
+          <p class="tag-line">Required</p>
+          <p>It's Friday the 13th. Make the player feel it. A school at night, footsteps behind you, a game that seems to know your name. Scary beats silly.</p>
+        </div>
+        <div class="box">
+          <div class="head"><h3>THE EXTRAS</h3><img class="px" src="images/pad.svg" alt="" width="32" height="20"></div>
+          <p class="tag-line">Your choice</p>
+          <p>Minigames, videos, sound. Use a lot, a little or none. A short story with six minigames counts. So does a long story with none.</p>
+        </div>
+      </div>
+      <p class="after">Your game has to run on a normal laptop, and a stranger at The Opening has to be able to play it without your help. Think small first: <b>a short game that works beats a big game that crashes.</b></p>
+    </section>
+
+    <section id="kit">
+      <h2>YOUR STARTER KIT</h2>
+      <p class="section-lead">The USB stick holds a starter kit. You don't have to use it: you can also build everything yourself. You get it at the briefing, with a README on how to install, run and change it. If you use it, get it running on every laptop at the kick-off.</p>
+      <div class="grid three">
+        <div class="box">
+          <h3>TEXTQUEST</h3>
+          <p>A Python library for text adventures. You write scenes, choices and items, and the library runs the game in the terminal, in a dark horror style. Flickering lights, TV static and jump scares are built in.</p>
+        </div>
+        <div class="box">
+          <h3>MINIGAMES</h3>
+          <p>A minigame is just a function that your story runs. The kit shows a very simple one that you could build yourself. There's also a Tetris game that you can change and add to.</p>
+        </div>
+        <div class="box">
+          <h3>VIDEOS</h3>
+          <p>Play a short clip from your game with one line of code. The kit has an example clip and a few sounds. The best clips are the ones you film yourself.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="paths">
+      <h2>CHOOSE YOUR PATH</h2>
+      <p class="section-lead">What's the heart of your game? Crews are grouped by progression in the study, so pick an idea that fits your crew. A simple game done well can beat a hard one done badly. The ideas below are only examples: mix them, change them, or come up with your own.</p>
+      <div class="grid two">
+        <div class="box">
+          <h3>THE STORYTELLER</h3>
+          <p class="lead">The story is the game.</p>
+          <ul class="px">
+            <li>Choices that come back to haunt the player much later.</li>
+            <li>A narrator who starts to lie.</li>
+            <li>A fear meter that changes the text, the colors and what the player can do.</li>
+            <li>Several endings, and one that's very hard to find.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>THE GAME MASTER</h3>
+          <p class="lead">A thin story, lots to play.</p>
+          <ul class="px">
+            <li>Every door in the hallway hides another minigame.</li>
+            <li>Hold your breath until it has walked past.</li>
+            <li>Remember the code on the wall before the lights go out.</li>
+            <li>A cursed game of Tetris that fights back.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>THE FILMMAKER</h3>
+          <p class="lead">Your own footage makes it real.</p>
+          <ul class="px">
+            <li>Found footage: the player finds old tapes, one by one.</li>
+            <li>Security cameras that show the hallway you just walked through.</li>
+            <li>A character who talks to the player on video, and slowly changes.</li>
+            <li>One very good jump scare at the very end.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>YOUR OWN PATH</h3>
+          <p class="lead">Something else entirely.</p>
+          <ul class="px">
+            <li>A game that pretends to be broken, or to delete itself.</li>
+            <li>Two players at one laptop who can't trust each other.</li>
+            <li>Anything else that has a story and makes people nervous.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="rules">
+      <h2>RULES OF SURVIVAL</h2>
+      <ol class="laws">
+        <li class="key"><b>Integrate early and often.</b><span class="tag">MOST IMPORTANT</span><br>The most common way to lose an end-of-quarter project: lots of parts that work on their own, and a game that doesn't. Get a tiny version running from start to end in the first hours, with every part connected, even if it's ugly. Then grow it. Bring everyone's work together several times a day, not at 14:00 on Friday.</li>
+        <li><b>Plan before you build.</b> Right after the briefing, make a MoSCoW list with your crew. Build the Musts first. Shoulds and Coulds only come after.</li>
+        <li><b>One crew, one repository.</b> Put your code in one GitLab repository. Commit small and often, and pull before you push. You'll get merge conflicts. That's normal, fix them together.</li>
+        <li><b>Everyone builds.</b> Every crew member writes code. Split the work so nobody has to wait for someone else.</li>
+        <li><b>Use what everyone knows.</b> Stick to Python, SQL, HTML and CSS. Anything else, like JavaScript or a framework, only if everyone in the crew already knows it. Knowing a cool tool doesn't mean you get to force it on the rest of your crew.</li>
+        <li><b>AI for ideas, not for code.</b> You may use AI to brainstorm ideas, names, stories or monsters. You may not use it to write or fix code. For code, use docs, search engines, your old assignments and each other.</li>
+        <li><b>Keep it scary, not gross.</b> No gore. If it wouldn't work at a school, leave it out. Warn players about flashing lights and don't make flashes faster than 3 per second. Only film people who said yes.</li>
+        <li><b>Ask for help.</b> Teachers walk around both days. Stuck for more than 20 minutes? Ask a teacher or another crew.</li>
+      </ol>
+    </section>
+
+    <section id="sidequests">
+      <h2>SIDE QUESTS</h2>
+      <p class="section-lead">Done with your main game, or a crew member who wants something different to work on? Pick a side quest. They're optional.</p>
+      <div class="grid two">
+        <div class="box">
+          <h3>THE FOOTAGE</h3>
+          <p>Film your own clip and play it in the game. A phone, a dark hallway and one good idea are enough.</p>
+        </div>
+        <div class="box">
+          <h3>THE EXTRA DOOR</h3>
+          <p>Build your own minigame from scratch, in the terminal or in a pygame window.</p>
+        </div>
+        <div class="box">
+          <h3>THE WALL OF NAMES</h3>
+          <p>Save the names of everyone who survived in a database and show them in the game. The <b>Python SQL</b> assignment (the second one in Web Applications) shows how to connect Python to a database with postgresqlite.</p>
+        </div>
+        <div class="box">
+          <h3>THE MISSING POSTER</h3>
+          <p>An HTML/CSS page for your game, with a title, screenshots and how to play. Show it at The Opening.</p>
+        </div>
+        <div class="box">
+          <h3>THE SAFE ROOM</h3>
+          <p>Let players save their progress to a file and load it again.</p>
+        </div>
+        <div class="box">
+          <h3>THE MONSTER FILES</h3>
+          <p>Use classes for your monsters, players or items. Only if your crew has started with OOP.</p>
+        </div>
+        <div class="box">
+          <h3>THE TITLE SCREEN</h3>
+          <p>A big ASCII-art logo, a menu, and an ending screen worth reaching.</p>
+        </div>
+        <div class="box">
+          <h3>THE SOUNDTRACK</h3>
+          <p>Creepy music and sound effects. Footsteps, doors, and a silence at just the right moment.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="days">
+      <h2>THE TWO DAYS</h2>
+      <p class="section-lead">Yes, Friday the 13th. Room 13 chose the date.</p>
+      <div class="table-wrap">
+        <table>
+          <tr><td class="when">WED 11 · 12:42</td><td class="what"><b>Briefing.</b> Meet your crew, get this brief and the starter kit, then make your MoSCoW list.</td></tr>
+          <tr><td class="when">THU 12 · 9:30</td><td class="what"><b>Kick-off.</b> Start building.</td></tr>
+          <tr><td class="when">FRI 13 · 9:30</td><td class="what"><b>Daily standup</b> with your crew.</td></tr>
+          <tr><td class="when">FRI 13 · 14:00</td><td class="what"><b>Retrospective</b> with your crew.</td></tr>
+          <tr class="final"><td class="when">FRI 13 · 15:00</td><td class="what"><b>Deadline</b>, then The Opening, the vote and drinks.</td></tr>
+        </table>
+      </div>
+      <div class="grid two spaced">
+        <div class="box">
+          <h3>THE STANDUP</h3>
+          <p>Everyone answers: What did I do yesterday? What will I do today? Is anything blocking me?</p>
+        </div>
+        <div class="box">
+          <h3>THE RETROSPECTIVE</h3>
+          <p>The crew answers: What went well? What could be better? What would we do differently next time?</p>
+        </div>
+      </div>
+      <p class="after">Write down your answers. You need them for your report.</p>
+    </section>
+
+    <section id="opening">
+      <h2>THE OPENING</h2>
+      <p class="section-lead">At 15:00 on Friday, the door opens. Every crew sets up their game on a laptop, and everyone walks around and plays each other's games. Have your game open and ready, with a short line on how to play next to it.</p>
+      <p class="section-lead">After that, you vote for the best game. You can't vote for your own crew. The winning crew gets a prize, and what it is stays a surprise until then. Vote on these four things:</p>
+      <div class="grid four">
+        <div class="box"><h3>POLISH</h3><p>It doesn't crash, a stranger can play it without help, and it feels finished.</p></div>
+        <div class="box"><h3>FEATURES</h3><p>The game does a lot, and all its parts work well together.</p></div>
+        <div class="box"><h3>CREATIVITY</h3><p>An idea, twist or style that no other crew came up with.</p></div>
+        <div class="box"><h3>FEAR</h3><p>Did it get to you? The horror matters, not only as a name on the title screen.</p></div>
+      </div>
+    </section>
+
+    <section id="handin">
+      <h2>WHAT YOU HAND IN</h2>
+      <div class="grid two">
+        <div>
+          <p>Only one thing: your own <code>report.md</code>, uploaded to the End-of-quarter project assignment in LMS42. You don't need to hand in your code.</p>
+          <p>Write down your notes from the standup and the retrospective, and what you learned about working in a team. The deadline is <b>Friday 20 November</b>, but it's best to write it right after the retrospective, while you still remember everything.</p>
+        </div>
+        <div>
+          <p class="list-intro">Passing is almost a given if you put in the effort. You pass when:</p>
+          <ul class="px">
+            <li>your crew delivered a game that fits the time and your progress in the study, or tried hard and learned a lot from failing;</li>
+            <li>you worked with your crew, not next to it;</li>
+            <li>you did your fair share of the work;</li>
+            <li>your report shows what you learned.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer class="closing">
+      <div class="line">NOW GO.<br>IT'S WAITING.</div>
+      <img class="px" src="images/ghost.svg" alt="" width="48" height="42">
+    </footer>
+  </div>
+</body>
+</html>

@@ -8,23 +8,27 @@ from pygame.math import Vector2
 from textquest.effects import say, jumpscare
 
 
-G = 1000
+G = 800
 
-WIDTH = 800
+WIDTH = 1200
 HEIGHT = 800
 BGCOLOR = pygame.Color(0, 0, 0)
+BG_PATH = Path(__file__).parent / "media" / "arcade.webp"
 
-HITS_NEEDED = 12
-SECONDS = 15
+COOLDOWN = 0.8
+HITS_NEEDED = 13
+TOTAL_SECONDS = 35
 
-PIE = Path(__file__).parent / "media" / "pie.png"
-APPLE = Path(__file__).parent / "media" / "apple.png"
-JUMPSCARE = Path(__file__).parent / "media" / "scream.mp3"
+APPLE_PATH = Path(__file__).parent / "media" / "apple.png"
+PIE_PATH = Path(__file__).parent / "media" / "pie.png"
+JUMPSCARE_PATH = Path(__file__).parent / "media" / "scream.mp3"
+MUSIC_PATH = Path(__file__).parent / "media" / "boemboemboem.mp3"
+
 
 RATE = 60
 DT = 1.0 / float(RATE)
 
-COLL_DIST = 80
+COLL_DIST = 60
 
 
 class Body:
@@ -42,55 +46,80 @@ class Body:
 
 
 def shoot_the_pies():
-    # TODO: explain controls
+    say("""Controls:
+    - Aim your cursor at where you want to shoot the apple
+    - Shoot by tapping [LEFT MOUSE BUTTON] or [SPACE]""")
     
+    pygame.init()
     pygame.display.init()
     pygame.font.init()
+    pygame.mixer.init()
+    
+    pygame.mixer.music.load(MUSIC_PATH)
+    pygame.mixer.music.play(loops=-1)
 
     window = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Shoot the pies!")
     font = pygame.font.Font(None, 40)
-
-    apple_img = pygame.image.load(APPLE).convert_alpha()
-    apple_obj = pygame.transform.scale(apple_img, (80, 80))
     
-    pie_img = pygame.image.load(PIE).convert_alpha()
-    pie_obj = pygame.transform.scale(pie_img, (80, 80))
+    bg_img = pygame.image.load(BG_PATH).convert_alpha()
+    
+    apple_img = pygame.image.load(APPLE_PATH).convert_alpha()
+    apple_obj = pygame.transform.scale(apple_img, (120, 120))
+
+    pie_img = pygame.image.load(PIE_PATH).convert_alpha()
+    pie_obj = pygame.transform.scale(pie_img, (120, 120))
 
     apples: list[Body] = []
     pies: list[Body] = []
     
+    last_shoot = time.monotonic() + COOLDOWN
     pie_timer = random.uniform(0, 1)
     
     hits = 0
 
     clock = pygame.time.Clock()
-    end_time = time.monotonic() + SECONDS
+    end_time = time.monotonic() + TOTAL_SECONDS
     while time.monotonic() < end_time:
         # update logic
+        can_shoot = time.monotonic() - last_shoot >= COOLDOWN
+        
         mouse_x, mouse_y = pygame.mouse.get_pos()
         shoot_x, shoot_y = WIDTH // 2, HEIGHT - 50
                     
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
-                jumpscare(sound=JUMPSCARE)
+                jumpscare(sound=JUMPSCARE_PATH)
                 say("Nobody escapes the throwing of pies! Mwuahahahahaha")
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE or event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                v = 2000 * (Vector2(mouse_x, mouse_y) - Vector2(shoot_x, shoot_y)).normalize()
-                apples.append(Body(Vector2(shoot_x, shoot_y), v))
-                apples[-1].acc = Vector2(0, G)
+                if can_shoot:
+                    v = 2000 * (Vector2(mouse_x, mouse_y) - Vector2(shoot_x, shoot_y)).normalize()
+                    apples.append(Body(Vector2(shoot_x, shoot_y), v))
+                    apples[-1].acc = Vector2(0, G)
+                    
+                    last_shoot = time.monotonic()
                                 
         if pie_timer <= 0:
-            v = Vector2(1000, 0).rotate(-30)
-            pies.append(Body(Vector2(-100, 200), v))
+            side = random.choice(["left", "right"])
+            
+            p = Vector2()
+            v = Vector2()
+            if side == "left":
+                p = Vector2(-100, 200)
+                v = Vector2(900, 0).rotate(random.uniform(-15, -30))
+            elif side == "right":
+                p = Vector2(WIDTH + 100, 200)
+                v = Vector2(-900, 0).rotate(random.uniform(15, 30))
+                
+            pies.append(Body(p, v))
             pies[-1].acc = Vector2(0, G)
             
             pie_timer = random.uniform(2, 4)
         pie_timer -= DT
         
         for apple in apples:
-            if apple.pos.x < 0 or apple.pos.x > WIDTH or apple.pos.y < 0 or apple.pos.y > HEIGHT:
+            if apple.pos.y < 0:
                 apples.remove(apple)
         
             apple.update(DT)
@@ -110,12 +139,18 @@ def shoot_the_pies():
         
         # begin draw
         window.fill(BGCOLOR)
+        
+        window.blit(pygame.transform.scale(bg_img, (WIDTH, HEIGHT)))
+
+        if can_shoot:
+            window.blit(apple_obj, Vector2(shoot_x, shoot_y) - Vector2(40, 40))
+
 
         for apple in apples:
-            window.blit(apple_obj, apple.pos - (40, 40))
+            window.blit(apple_obj, apple.pos - Vector2(40, 40))
             
         for pie in pies:
-            window.blit(pie_obj, pie.pos - (40, 40))
+            window.blit(pie_obj, pie.pos - Vector2(40, 40))
 
         time_left = int(end_time - time.monotonic()) + 1
         window.blit(font.render(f"Hits: {hits} / {HITS_NEEDED}   Time: {time_left}", True, "white"), (10, 10))
@@ -125,14 +160,11 @@ def shoot_the_pies():
         clock.tick(RATE)
 
     pygame.display.quit()
-    if hits >= HITS_NEEDED:
-        return True
-    return False
+    return hits >= HITS_NEEDED
 
 
 def make_game():
     return shoot_the_pies()
-    
 
 
 if __name__ == "__main__":

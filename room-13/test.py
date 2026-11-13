@@ -7,12 +7,18 @@ from textquest.game import Game
 from textquest.scene import Option, Scene
 from textquest.effects import say, static, flicker
 from crying_girl import interact_with_girl, open_door
-from secret_room import enter_secret_room, riddle1, riddle2, riddle3
+from secret_room import enter_secret_room, riddle1, riddle2, riddle3, table, safe_cracking, DOCUMENTS
 from examples.rad import make_game as make_game1
 from examples.snake_game.main import play_snake_game as make_game2
 from examples.shoot_the_pies import make_game as make_game3
+from textquest.sound import play_sound
+from pathlib import Path
 
+MUSIC = Path(__file__).parent / "examples" / "media" / "background.mp3"
+
+TIME_SECONDS = 30
 KEYS_NEEDED = 2
+
 SNAKE_INTRO = """
 Welcome to the Cursed Snake Game...
 
@@ -31,11 +37,13 @@ Welcome to the Wheel of Misfortune!
 One spin. Only one way to win.
 
 Feeling lucky?
+81e54553d7ccaf6877f3f1de7fac5fef26a
 
 Don't worry, Kitty is rooting for you...
 
 Or is she?
 """
+
 SHOOTING_INTRO = """
 Welcome to Apple Waster!
 
@@ -97,7 +105,7 @@ NORMAL_ARCADE_ASCII = """
 |_|____|_____________________________________________|____|__|
 """
 
-ARCADE_ACII = """
+ARCADE_ASCII = """
 ⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⠀
 ⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠀
 ⠀⢠⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡄⠀⠀
@@ -113,10 +121,34 @@ ARCADE_ACII = """
 ⠻⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠃
 """
 
+SAFE_ASCII = """
+ ________________________________________
+ │                                      │
+ │                                      │
+ │                   ┌─────┐            │
+ │                   │ xxx │            │
+ │   \\   /           │ xxx │   ______   │
+ │    \\ /            │ xxx │   |    |   │
+ │  ---0---          └─────┘   |    |   │
+ │    / \\                      |    |   │
+ │   /   \\                     |____|   │
+ │                                      │
+ │                                      │
+ │                                      │
+ │                                      │
+ │______________________________________│
+                                         
+"""
 
-# functions
-def read_poster(game):
-    say("""
+SAFE_TEXT = """
+You inspect the safe and see a num pad where you can enter a 3 digit code.
+There is a sticky note next to it
+"""
+
+NOTE_TEXT = '\"If you forgot the code to the safe, just solve the riddles\"'
+
+
+POSTER = """
     _________________________________
    |                                 |
    |      WELCOME TO THE ARCADE!     |
@@ -128,8 +160,20 @@ def read_poster(game):
    |  And stay and play forever.     |
    |                                 |
    |_________________________________|
-   
-""", speed=0.05)
+"""
+
+
+# functions
+def read_poster(game):
+    say(POSTER)
+
+
+def read_documents(game):
+    say(DOCUMENTS)
+
+
+def read_note(game):
+    say("The note reads:\n" + NOTE_TEXT)
 
 
 def insert_coin(game, game_number):
@@ -157,11 +201,11 @@ def load_game1(game):
         result = make_game1()
         game.set("powered_game1", False)
         if result:
-            say("Congrats on beating the game!")
+            say("How sweet you won...\nDon't let it get to your head.")
             game.set("beat_game1")
             game.change("mini game wins", +1)
         else:
-            say("You didn't beat the game... Good luck with the other ones")
+            say("Guess Kitty wasn't rooting...\nBut then again, is anyone?")
             game.set("lost_game1")
     else:
         say("The machine looks powered off")
@@ -174,11 +218,11 @@ def load_game2(game):
         result = make_game2()
         game.set("powered_game2", False)
         if result:
-            say("Congrats on beating the game!")
+            say("Congrats the souls are freed!\nLet's hope they stay away.")
             game.set("beat_game2")
             game.change("mini game wins", +1)
         else:
-            say("You didn't beat the game... Good luck with the other ones")
+            say("13 souls remain trapped.\nI'm sure you have other talents...")
             game.set("lost_game2")
     else:
         say("The machine looks powered off")
@@ -191,11 +235,11 @@ def load_game3(game):
         result = make_game3()
         game.set("powered_game3", False)
         if result:
-            say("Congrats on beating the game!")
+            say("Wonderful, you hit all those pies!\nYou must be so proud of yourself...")
             game.set("beat_game3")
             game.change("mini game wins", +1)
         else:
-            say("You didn't beat the game... Good luck with the other ones")
+            say("What a waste of apples...")
             game.set("lost_game3")
     else:
         say("The machine looks powered off")
@@ -203,15 +247,16 @@ def load_game3(game):
 
 def choose_ending(game):
     say("You chose to leave the arcade hall... \nYour fate will be decided...")
-    if game.get("mini game wins") == 1:
-        return "bad"
     if game.get("mini game wins") >= 2:
         return "good"
+    if game.get("talked_to_lily") or game.get("lost_game1") or game.get("lost_game2") or game.get("lost_game3") or game.get("safe unlocked"):
+        return "bad"
     return "nothing"
 
 
 #  play game functionality
 def main_game():
+    play_sound(MUSIC)
     game = Game(
         "Haunted Arcade",
         start="arcade",
@@ -226,13 +271,15 @@ def main_game():
             first_text=FIRST_TEXT + NORMAL_ARCADE_ASCII,
             text=NORMAL_ARCADE_ASCII + NORMAL_ARCADE,
             options=[
-                Option("Walk out of the arcade", "outside"),
                 Option("Look at the poster", action=read_poster),
                 Option("Look at machine 1", "machine 1"),
                 Option("Look at machine 2", "machine 2"),
                 Option("Look at machine 3", "machine 3"),
-                Option("Approach the crying girl", action=interact_with_girl),
+                Option("Approach the crying girl",
+                       action=interact_with_girl,
+                       condition=lambda game: bool(not game.get("girl_disappeared"))),
                 Option("Open the mysterious door", action=open_door),
+                Option("Walk out of the arcade", "outside"),
             ],
         )
     )
@@ -240,20 +287,24 @@ def main_game():
     game.add(
         Scene(
             "machine 1",
-            title="Machine 1",
-            text=LUCK_INTRO,
+            title="Wheel of Misfortune",
+            text=LUCK_INTRO + ARCADE_ASCII,
             options=[
                 Option(
                     "Insert a coin",
                     action=lambda game: insert_coin(game, 1),
-                    condition=lambda game: not bool(game.get("powered_game1"))
-                    and not bool(game.get("beat_game1")),
+                    condition=lambda game: (
+                        not bool(game.get("powered_game1"))
+                        and not bool(game.get("beat_game1"))
+                    ),
                 ),
                 Option(
                     "Play the game",
                     action=load_game1,
-                    condition=lambda game: bool(game.get("powered_game1"))
-                    and not bool(game.get("beat_game1")),
+                    condition=lambda game: (
+                        bool(game.get("powered_game1"))
+                        and not bool(game.get("beat_game1"))
+                    ),
                 ),
                 Option("Go Back", "arcade"),
             ],
@@ -263,20 +314,24 @@ def main_game():
     game.add(
         Scene(
             "machine 2",
-            title="Machine 2",
-            text=SNAKE_INTRO,
+            title="Cursed Snake",
+            text=SNAKE_INTRO + ARCADE_ASCII,
             options=[
                 Option(
                     "Insert a coin",
                     action=lambda game: insert_coin(game, 2),
-                    condition=lambda game: not bool(game.get("powered_game2"))
-                    and not bool(game.get("beat_game2")),
+                    condition=lambda game: (
+                        not bool(game.get("powered_game2"))
+                        and not bool(game.get("beat_game2"))
+                    ),
                 ),
                 Option(
                     "Play the game",
                     action=load_game2,
-                    condition=lambda game: bool(game.get("powered_game2"))
-                    and not bool(game.get("beat_game2")),
+                    condition=lambda game: (
+                        bool(game.get("powered_game2"))
+                        and not bool(game.get("beat_game2"))
+                    ),
                 ),
                 Option("Go Back", "arcade"),
             ],
@@ -286,20 +341,24 @@ def main_game():
     game.add(
         Scene(
             "machine 3",
-            title="Machine 3",
-            text=SHOOTING_INTRO,
+            title="Apple Waster",
+            text=SHOOTING_INTRO + ARCADE_ASCII,
             options=[
                 Option(
                     "Insert a coin",
                     action=lambda game: insert_coin(game, 3),
-                    condition=lambda game: not bool(game.get("powered_game3"))
-                    and not bool(game.get("beat_game3")),
+                    condition=lambda game: (
+                        not bool(game.get("powered_game3"))
+                        and not bool(game.get("beat_game3"))
+                    ),
                 ),
                 Option(
                     "Play the game",
                     action=load_game3,
-                    condition=lambda game: bool(game.get("powered_game3"))
-                    and not bool(game.get("beat_game3")),
+                    condition=lambda game: (
+                        bool(game.get("powered_game3"))
+                        and not bool(game.get("beat_game3"))
+                    ),
                 ),
                 Option("Go Back", "arcade"),
             ],
@@ -311,13 +370,36 @@ def main_game():
             title="Secret Room",
             text="You step into a dark room. The air feels strangely cold.",
             options=[
-                Option("Explore the secret room", action=enter_secret_room),
+                Option("Explore the secret room", action=enter_secret_room, condition=lambda game: bool(not game.get("secret_explored"))),
                 Option("Return to the arcade", "arcade"),
-                Option("Look at the table", action=table, condition=lambda game: bool(game.get("secret_explored"))),
+                Option("Look at the table", action=table, condition=lambda game: bool(game.get("secret_explored")), once=True),
                 Option("Look at riddle 1", action=riddle1, condition=lambda game: bool(game.get("secret_explored"))),
                 Option("Look at riddle 2", action=riddle2, condition=lambda game: bool(game.get("secret_explored"))),
                 Option("Look at riddle 3", action=riddle3, condition=lambda game: bool(game.get("secret_explored"))),
+                Option("Look at the safe", "safe", condition=lambda game: bool(game.get("secret_explored"))),
             ],
+        )
+    )
+    game.add(
+        Scene(
+            "safe",
+            title="The Safe",
+            text=SAFE_ASCII,
+            options=[
+                Option("Try and input a code", action=safe_cracking, condition=lambda game: bool(not game.get("safe unlocked"))),
+                Option("Open the safe", "inside safe", condition=lambda game: bool(game.get("safe unlocked"))),
+                Option("Read the note", action=read_note),
+                Option("Back away", "secret room")
+            ]
+        ),
+        Scene(
+            "inside safe",
+            text="Inside you find some documents",
+            options=[
+                Option("Read documents", action=read_documents),
+                Option("Back away", "secret room")
+
+            ]
         )
     )
 
@@ -326,27 +408,18 @@ def main_game():
             "outside",
             title="Outside",
             text="Cold air. You made it outside.[pause] You hear a whispering voice behind you too unclear to make out.",
-            options=[Option("Continue", action=choose_ending),
-                     Option("Go back inside", "arcade")],
+            options=[
+                Option("Continue", action=choose_ending),
+                Option("Go back inside", "arcade"),
+            ],
         )
     )
 
-    # TODO endings
     game.add(
-        Scene(
-            "good",
-            title="Good Gamer",
-            ending="win",
-            text=lambda game: f"{game.get('keys')} mini games beaten!",
-        ),
-        Scene(
-            "bad",
-            title="Bad Gamer",
-            ending="lose",
-            text=lambda game: f"Only {game.get('keys')} earned...",
-        ),
-        Scene("nothing", title="Did Nothing", ending="lose", text="No games beaten..."),
-    )
+    Scene("good", title="Good Ending", ending="win", text=""),
+    Scene("bad", title="Bad Ending", ending="lose", text=""),
+    Scene("nothing", title="Did Nothing", ending="lose", text=""),
+)
     return game
 
 

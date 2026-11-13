@@ -447,6 +447,7 @@ def _show_end(ending):
         say(GOOD_ENDING)
     else:
         say(NO_ENDING)
+        jumpscare()
     say()
     pause("Press Enter to leave...")
     return ending

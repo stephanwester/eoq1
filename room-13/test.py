@@ -3,14 +3,14 @@
 Run it with:  poetry run python test.py
 """
 
-from textquest.game import Game
-from textquest.scene import Option, Scene
-from textquest.effects import say, static, flicker
-from crying_girl import interact_with_girl, open_door
-from secret_room import enter_secret_room, riddle1, riddle2, riddle3, table, safe_cracking, DOCUMENTS
-from examples.rad import make_game as make_game1
+from secret_room import enter_secret_room, riddle1, riddle2, riddle3, table, safe_cracking, collect_coins, DOCUMENTS
 from examples.snake_game.main import play_snake_game as make_game2
 from examples.shoot_the_pies import make_game as make_game3
+from examples.rad import make_game as make_game1
+from crying_girl import interact_with_girl, open_door
+from textquest.effects import say, static, flicker
+from textquest.scene import Option, Scene
+from textquest.game import Game
 from textquest.sound import play_sound
 from pathlib import Path
 
@@ -37,7 +37,6 @@ Welcome to the Wheel of Misfortune!
 One spin. Only one way to win.
 
 Feeling lucky?
-81e54553d7ccaf6877f3f1de7fac5fef26a
 
 Don't worry, Kitty is rooting for you...
 
@@ -140,6 +139,19 @@ SAFE_ASCII = """
                                          
 """
 
+SECRET_ROOM_ASCII = """
+┌─────────────────────────────────┐
+│         ┌───┐┌───┐┌───┐         │
+│         └───┘└───┘└───┘         │
+│                                 │
+│┌─┐            ,-.               │
+│└─┘           (   )              │
+│               `-'        ╓───╖  │
+│                          ║   ║  │
+│                          ║   ║  │
+└──────────────────────────╙───╜──┘
+"""
+
 SAFE_TEXT = """
 You inspect the safe and see a num pad where you can enter a 3 digit code.
 There is a sticky note next to it
@@ -209,6 +221,7 @@ def load_game1(game):
             game.set("lost_game1")
     else:
         say("The machine looks powered off")
+    play_sound(MUSIC, -1)
 
 
 def load_game2(game):
@@ -256,7 +269,7 @@ def choose_ending(game):
 
 #  play game functionality
 def main_game():
-    play_sound(MUSIC)
+    play_sound(MUSIC, -1)
     game = Game(
         "Haunted Arcade",
         start="arcade",
@@ -271,10 +284,10 @@ def main_game():
             first_text=FIRST_TEXT + NORMAL_ARCADE_ASCII,
             text=NORMAL_ARCADE_ASCII + NORMAL_ARCADE,
             options=[
-                Option("Look at the poster", action=read_poster),
                 Option("Look at machine 1", "machine 1"),
                 Option("Look at machine 2", "machine 2"),
                 Option("Look at machine 3", "machine 3"),
+                Option("Look at the poster", action=read_poster),
                 Option("Approach the crying girl",
                        action=interact_with_girl,
                        condition=lambda game: bool(not game.get("girl_disappeared"))),
@@ -368,15 +381,16 @@ def main_game():
         Scene(
             "secret room",
             title="Secret Room",
-            text="You step into a dark room. The air feels strangely cold.",
+            first_text="You step into a dark room. The air feels strangely cold." + SECRET_ROOM_ASCII,
+            text=SECRET_ROOM_ASCII,
             options=[
-                Option("Explore the secret room", action=enter_secret_room, condition=lambda game: bool(not game.get("secret_explored"))),
-                Option("Return to the arcade", "arcade"),
-                Option("Look at the table", action=table, condition=lambda game: bool(game.get("secret_explored")), once=True),
                 Option("Look at riddle 1", action=riddle1, condition=lambda game: bool(game.get("secret_explored"))),
                 Option("Look at riddle 2", action=riddle2, condition=lambda game: bool(game.get("secret_explored"))),
                 Option("Look at riddle 3", action=riddle3, condition=lambda game: bool(game.get("secret_explored"))),
                 Option("Look at the safe", "safe", condition=lambda game: bool(game.get("secret_explored"))),
+                Option("Look at the table", action=table, condition=lambda game: bool(game.get("secret_explored")), once=True),
+                Option("Explore the secret room", action=enter_secret_room, condition=lambda game: bool(not game.get("secret_explored"))),
+                Option("Return to the arcade", "arcade"),
             ],
         )
     )
@@ -394,9 +408,10 @@ def main_game():
         ),
         Scene(
             "inside safe",
-            text="Inside you find some documents",
+            text="Inside you find some documents and a small stash of coins.",
             options=[
                 Option("Read documents", action=read_documents),
+                Option("Collect the coins", action=collect_coins, once=True),
                 Option("Back away", "secret room")
 
             ]

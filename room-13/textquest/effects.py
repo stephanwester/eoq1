@@ -4,7 +4,7 @@ Use say() for everything you show. It understands tags:
     say("The door creaks open...[pause] [red]something[/] is inside.")
 """
 import random
-
+from pathlib import Path
 from textquest import markup, screen
 from textquest.sound import play_sound
 
@@ -12,6 +12,8 @@ settings = {
     "text_speed": 0.03,  # seconds per letter, 0 shows text at once
     "max_width": 80,     # text wraps at this many letters (or less if the window is smaller)
 }
+
+MUSIC = Path(__file__).parent.parent / "examples" / "media" / "background.mp3"
 
 GLITCH_LETTERS = "#%&@$!?*<>/\\|~^"
 STATIC_LETTERS = " ░▒▓"

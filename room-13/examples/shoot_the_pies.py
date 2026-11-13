@@ -4,9 +4,7 @@ from pathlib import Path
 
 import pygame
 from pygame.math import Vector2
-
-from textquest.effects import say, jumpscare
-
+from textquest.effects import say
 
 G = 800
 
@@ -21,8 +19,7 @@ TOTAL_SECONDS = 35
 
 APPLE_PATH = Path(__file__).parent / "media" / "apple.png"
 PIE_PATH = Path(__file__).parent / "media" / "pie.png"
-JUMPSCARE_PATH = Path(__file__).parent / "media" / "scream.mp3"
-MUSIC_PATH = Path(__file__).parent / "media" / "boemboemboem.mp3"
+MUSIC_PATH = Path(__file__).parent / "media" / "crunch.mp3"
 
 
 RATE = 60
@@ -90,11 +87,10 @@ def shoot_the_pies():
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
-                jumpscare(sound=JUMPSCARE_PATH)
                 say("Nobody escapes the throwing of pies! Mwuahahahahaha")
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE or event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if can_shoot:
-                    v = 2000 * (Vector2(mouse_x, mouse_y) - Vector2(shoot_x, shoot_y)).normalize()
+                    v = 1000 * (Vector2(mouse_x, mouse_y) - Vector2(shoot_x, shoot_y)).normalize()
                     apples.append(Body(Vector2(shoot_x, shoot_y), v))
                     apples[-1].acc = Vector2(0, G)
                     
@@ -159,6 +155,7 @@ def shoot_the_pies():
         pygame.display.flip()
         clock.tick(RATE)
 
+    pygame.mixer.music.stop()
     pygame.display.quit()
     return hits >= HITS_NEEDED
 

@@ -79,8 +79,8 @@ def riddle3(game):
 
 
 def table(game):
-    say("You find a small stash of coins lying on the table.")
-    game.change("coins", +3)
+    say("You find a single coin lying on the table.")
+    game.change("coins", +1)
 
 
 def safe_cracking(game):
@@ -90,3 +90,8 @@ def safe_cracking(game):
         game.set("safe unlocked")
     else:
         say("As you put in the code and press enter, the screen lights [blood]red[/].")
+
+
+def collect_coins(game):
+    say("You collect the coins and put them in your pocket.")
+    game.change("coins", +5)

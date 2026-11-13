@@ -10,12 +10,12 @@ from textquest.errors import TextQuestError
 _problems: list[str] = []  # so the 'sound is off' message is shown only once
 
 
-def play_sound(path):
+def play_sound(path, played=1):
     """Play a sound file (.wav or .ogg) without waiting for it to finish."""
     if not os.path.exists(path):
         raise TextQuestError(f"Can't play sound '{path}': there is no such file.")
     if start_mixer():
-        pygame.mixer.Sound(path).play()
+        pygame.mixer.Sound(path).play(played)
 
 
 def start_mixer():

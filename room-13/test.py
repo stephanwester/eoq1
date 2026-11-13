@@ -12,6 +12,8 @@ from examples.rad import make_game as make_game1
 from examples.snake_game.main import play_snake_game as make_game2
 from examples.shoot_the_pies import make_game as make_game3
 
+
+TIME_SECONDS = 30
 KEYS_NEEDED = 2
 SNAKE_INTRO = """
 Welcome to the Cursed Snake Game...
@@ -115,8 +117,11 @@ ARCADE_ACII = """
 
 
 # functions
+
+
 def read_poster(game):
-    say("""
+    say(
+        """
     _________________________________
    |                                 |
    |      WELCOME TO THE ARCADE!     |
@@ -129,8 +134,10 @@ def read_poster(game):
    |                                 |
    |_________________________________|
    
-""", speed=0.05)
-
+""",
+        speed=0.05,
+    )
+    
 
 def insert_coin(game, game_number):
     beat_flag = f"beat_game{game_number}"
@@ -246,14 +253,18 @@ def main_game():
                 Option(
                     "Insert a coin",
                     action=lambda game: insert_coin(game, 1),
-                    condition=lambda game: not bool(game.get("powered_game1"))
-                    and not bool(game.get("beat_game1")),
+                    condition=lambda game: (
+                        not bool(game.get("powered_game1"))
+                        and not bool(game.get("beat_game1"))
+                    ),
                 ),
                 Option(
                     "Play the game",
                     action=load_game1,
-                    condition=lambda game: bool(game.get("powered_game1"))
-                    and not bool(game.get("beat_game1")),
+                    condition=lambda game: (
+                        bool(game.get("powered_game1"))
+                        and not bool(game.get("beat_game1"))
+                    ),
                 ),
                 Option("Go Back", "arcade"),
             ],
@@ -269,14 +280,18 @@ def main_game():
                 Option(
                     "Insert a coin",
                     action=lambda game: insert_coin(game, 2),
-                    condition=lambda game: not bool(game.get("powered_game2"))
-                    and not bool(game.get("beat_game2")),
+                    condition=lambda game: (
+                        not bool(game.get("powered_game2"))
+                        and not bool(game.get("beat_game2"))
+                    ),
                 ),
                 Option(
                     "Play the game",
                     action=load_game2,
-                    condition=lambda game: bool(game.get("powered_game2"))
-                    and not bool(game.get("beat_game2")),
+                    condition=lambda game: (
+                        bool(game.get("powered_game2"))
+                        and not bool(game.get("beat_game2"))
+                    ),
                 ),
                 Option("Go Back", "arcade"),
             ],
@@ -292,14 +307,18 @@ def main_game():
                 Option(
                     "Insert a coin",
                     action=lambda game: insert_coin(game, 3),
-                    condition=lambda game: not bool(game.get("powered_game3"))
-                    and not bool(game.get("beat_game3")),
+                    condition=lambda game: (
+                        not bool(game.get("powered_game3"))
+                        and not bool(game.get("beat_game3"))
+                    ),
                 ),
                 Option(
                     "Play the game",
                     action=load_game3,
-                    condition=lambda game: bool(game.get("powered_game3"))
-                    and not bool(game.get("beat_game3")),
+                    condition=lambda game: (
+                        bool(game.get("powered_game3"))
+                        and not bool(game.get("beat_game3"))
+                    ),
                 ),
                 Option("Go Back", "arcade"),
             ],
@@ -313,10 +332,22 @@ def main_game():
             options=[
                 Option("Explore the secret room", action=enter_secret_room),
                 Option("Return to the arcade", "arcade"),
-                Option("Look at the table", action=table, condition=lambda game: bool(game.get("secret_explored"))),
-                Option("Look at riddle 1", action=riddle1, condition=lambda game: bool(game.get("secret_explored"))),
-                Option("Look at riddle 2", action=riddle2, condition=lambda game: bool(game.get("secret_explored"))),
-                Option("Look at riddle 3", action=riddle3, condition=lambda game: bool(game.get("secret_explored"))),
+                # Option("Look at the table", action=table, condition=lambda game: bool(game.get("secret_explored"))),
+                Option(
+                    "Look at riddle 1",
+                    action=riddle1,
+                    condition=lambda game: bool(game.get("secret_explored")),
+                ),
+                Option(
+                    "Look at riddle 2",
+                    action=riddle2,
+                    condition=lambda game: bool(game.get("secret_explored")),
+                ),
+                Option(
+                    "Look at riddle 3",
+                    action=riddle3,
+                    condition=lambda game: bool(game.get("secret_explored")),
+                ),
             ],
         )
     )
@@ -326,8 +357,10 @@ def main_game():
             "outside",
             title="Outside",
             text="Cold air. You made it outside.[pause] You hear a whispering voice behind you too unclear to make out.",
-            options=[Option("Continue", action=choose_ending),
-                     Option("Go back inside", "arcade")],
+            options=[
+                Option("Continue", action=choose_ending),
+                Option("Go back inside", "arcade"),
+            ],
         )
     )
 

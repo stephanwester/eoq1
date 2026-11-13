@@ -12,6 +12,47 @@ from textquest.sound import play_sound
 from textquest.video import play_video
 
 WARNING = "Warning: this game has flashing lights and sudden scares."
+BAD_ENDING = """
+The arcade machines slowly shut down.
+
+Everything goes quiet.
+
+...
+
+You wake up in your own bed.
+
+Just a nightmare...
+
+Then, from underneath your bed, a familiar voice whispers:
+
+"Silly... silly..."
+
+[JUMPSCARE]
+"""
+
+GOOD_ENDING = """
+The exit door finally opens.
+
+You step through...
+
+And find yourself in your bedroom.
+
+On your bedside table lies an old photograph.
+
+It's the arcade, dated 1986.
+
+You look closer.
+
+There you are, standing next to Lily.
+
+She's holding your hand.
+
+Suddenly, you hear a little girl giggling.
+
+"Hihi... silly!"
+
+The screen fades to black.
+"""
 
 
 class Game:
@@ -389,10 +430,9 @@ def _show_end(ending):
     # TODO add custom endings
     say()
     if ending == "lose":
-        say("[blood][glitch]YOU DID NOT SURVIVE.[/][/]", speed=0.08)
+        say(BAD_ENDING)
     elif ending == "win":
-        say("[bold]YOU SURVIVED.[/]", speed=0.08)
-        say("[pause][whisper]For now.[/]")
+        say(GOOD_ENDING)
     else:
         say("[blood]THE END[/]", speed=0.08)
     say()

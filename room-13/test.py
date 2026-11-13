@@ -7,7 +7,7 @@ from textquest.game import Game
 from textquest.scene import Option, Scene
 from textquest.effects import say, static, flicker
 from crying_girl import interact_with_girl, open_door
-from secret_room import enter_secret_room
+from secret_room import enter_secret_room, riddle1, riddle2, riddle3
 from examples.rad import make_game as make_game1
 from examples.snake_game.main import play_snake_game as make_game2
 from examples.shoot_the_pies import make_game as make_game3
@@ -117,14 +117,19 @@ ARCADE_ACII = """
 # functions
 def read_poster(game):
     say("""
-       WELCOME TO THE ARCADE!
-
-          Three games.
-     Win two to earn your freedom.
-
-       Fail to win enough...
-      And stay and play forever.
-""")
+    _________________________________
+   |                                 |
+   |      WELCOME TO THE ARCADE!     |
+   |                                 |
+   |         Three games.            |
+   |  Win two to earn your freedom.  |
+   |                                 |
+   |      Fail to win enough...      |
+   |  And stay and play forever.     |
+   |                                 |
+   |_________________________________|
+   
+""", speed=0.05)
 
 
 def insert_coin(game, game_number):
@@ -154,7 +159,7 @@ def load_game1(game):
         if result:
             say("Congrats on beating the game!")
             game.set("beat_game1")
-            game.change("key", +1)
+            game.change("mini game wins", +1)
         else:
             say("You didn't beat the game... Good luck with the other ones")
             game.set("lost_game1")
@@ -171,7 +176,7 @@ def load_game2(game):
         if result:
             say("Congrats on beating the game!")
             game.set("beat_game2")
-            game.change("key", +1)
+            game.change("mini game wins", +1)
         else:
             say("You didn't beat the game... Good luck with the other ones")
             game.set("lost_game2")
@@ -188,7 +193,7 @@ def load_game3(game):
         if result:
             say("Congrats on beating the game!")
             game.set("beat_game3")
-            game.change("key", +1)
+            game.change("mini game wins", +1)
         else:
             say("You didn't beat the game... Good luck with the other ones")
             game.set("lost_game3")
@@ -198,9 +203,9 @@ def load_game3(game):
 
 def choose_ending(game):
     say("You chose to leave the arcade hall... \nYour fate will be decided...")
-    if game.get("key") == 1:
+    if game.get("mini game wins") == 1:
         return "bad"
-    if game.get("key") >= 2:
+    if game.get("mini game wins") >= 2:
         return "good"
     return "nothing"
 
@@ -211,10 +216,8 @@ def main_game():
         "Haunted Arcade",
         start="arcade",
         subtitle="Play the games or suffer the consequences",
-        stats={"key": 0, "coins": 3},
+        stats={"mini game wins": 0, "coins": 3},
     )
-
-    #todo? make the arcade machines in a different room that this will be the entrance?
 
     game.add(
         Scene(
@@ -310,6 +313,10 @@ def main_game():
             options=[
                 Option("Explore the secret room", action=enter_secret_room),
                 Option("Return to the arcade", "arcade"),
+                Option("Look at the table", action=table, condition=lambda game: bool(game.get("secret_explored"))),
+                Option("Look at riddle 1", action=riddle1, condition=lambda game: bool(game.get("secret_explored"))),
+                Option("Look at riddle 2", action=riddle2, condition=lambda game: bool(game.get("secret_explored"))),
+                Option("Look at riddle 3", action=riddle3, condition=lambda game: bool(game.get("secret_explored"))),
             ],
         )
     )
@@ -324,7 +331,7 @@ def main_game():
         )
     )
 
-    # endings
+    # TODO endings
     game.add(
         Scene(
             "good",

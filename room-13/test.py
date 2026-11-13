@@ -271,7 +271,7 @@ def choose_ending(game):
 def main_game():
     play_sound(MUSIC, -1)
     game = Game(
-        "Haunted Arcade",
+        "Hello! Arcade",
         start="arcade",
         subtitle="Play the games or suffer the consequences",
         stats={"mini game wins": 0, "coins": 3},

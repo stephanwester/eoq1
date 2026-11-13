@@ -5,7 +5,7 @@ import difflib
 import random
 
 from textquest import effects, screen
-from textquest.effects import boxed, choose, clear, drips, pause, say, show_art
+from textquest.effects import boxed, choose, clear, drips, pause, say, show_art, jumpscare
 from textquest.errors import TextQuestError
 from textquest.scene import GameFunction, Option, Scene
 from textquest.sound import play_sound
@@ -442,6 +442,7 @@ def _show_end(ending):
     say()
     if ending == "lose":
         say(BAD_ENDING)
+        jumpscare()
     elif ending == "win":
         say(GOOD_ENDING)
     else:

@@ -24,6 +24,7 @@ Fail, and your soul will join them for eternity.
 
 Will you break the curse, or become part of it?
 """
+
 LUCK_INTRO = """
 Welcome to the Wheel of Misfortune!
 
@@ -47,23 +48,70 @@ It's not like there are people starving somewhere...
 
 Anyway, ready to play?
 """
-FIRST_TEXT = (
-    """
+
+FIRST_TEXT = """
 You open your eyes.
 
 Where... are you?
 
 You can't remember how you got here. In fact, you can't remember anything... except your name.
 
-You're standing in an abandoned arcade. Three old machines flicker, their cheerful music echoing through the empty room.
+You're standing in an abandoned arcade. Three old machines flicker, seemingly wanting to come alive.
 
 Behind you is an exit door with a strange poster beside it.
 
 Somewhere in the corner, you hear a little girl crying.
 
 Something about this place feels strangely familiar...
-""",
-)
+
+You feel in your pockets and find 3 coins.
+"""
+
+NORMAL_ARCADE = """
+You a door on one wall with an exit sign above it and a poster next to it.
+On another wall you see 3 arcade machines lined up.
+In a corner there is the little girl with an old looking door next to it.
+"""
+
+NORMAL_ARCADE_ASCII = """
+ ____________________________________________________________
+|                                                            |
+|    .------.        .------.        .------.                |
+|    |######|        |######|        |######|                |
+|    |#Luck#|        |#Free#|        |#Fill#|                |
+|    |######|        |######|        |######|                |
+|    '------'        '------'        '------'                |
+|    | o  + |        | o  + |        | o  + |                |
+|    | /--\\ |        | /--\\ |        | /--\\ |                |
+|    |_|__|_|        |_|__|_|        |_|__|_|                |
+|    |   1  |        |   2  |        |   3  |                |
+|    |______|        |______|        |______|                |
+|                                                            |
+|                                                            |
+|  ____                                                      |
+| |    |   o                                ___       ____   |
+| |DOOR|  /|\\                              |   |     |    |  |
+| |  ? |  / \\                              |   |     |EXIT|  |
+| |   o|  little                           |___|     | 1 o|  |
+| |    |  girl                                       |    |  |
+|_|____|_____________________________________________|____|__|
+"""
+
+ARCADE_ACII = """
+⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⠀
+⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠀
+⠀⢠⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⡄⠀⠀
+⠀⢸⣿⣿⡟⠉⠉⠉⠉⠉⠉⠉⠉⠉⠉⢻⣿⣿⡇⠀⠀
+⠀⢸⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⡇⠀⠀
+⠀⢸⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⡇⠀⠀
+⠀⢸⣿⣿⣧⣀⣀⠀⣴⣿⣿⣦⠀⣀⣀⣼⣿⣿⡇⠀⠀
+⠀⠸⠿⠿⠿⠿⠿⠄⠘⣿⣿⠃⠠⠿⠿⠿⠿⠿⠇⠀⠀
+⠀⣤⣤⣤⣤⣤⣤⣤⠀⣿⣿⠀⣤⣤⣤⣤⣤⣤⣤⠀⠀
+⢰⣿⣿⣿⣿⣿⣿⣿⣄⡈⢁⣠⣿⣿⣿⣿⣿⣿⣿⣧⠀
+⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠛⠂
+⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⣶⡆
+⠻⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠿⠃
+"""
 
 
 # functions
@@ -166,16 +214,14 @@ def main_game():
         stats={"key": 0, "coins": 3},
     )
 
+    #todo? make the arcade machines in a different room that this will be the entrance?
+
     game.add(
         Scene(
             "arcade",
             title="Arcade",
-            first_text="You fell asleep in your bed. But when you open your eyes you're at an abandoned arcade hall. There's a door behind you with a poster next to it."
-            "\nIn front of you are 3 old arcade machines.",
-            text=lambda game: (
-                f"{game.get('key')} mini games beaten! \nThere's a door to the west you with a poster next to it."
-                "\nOn the other walls are 3 old arcade machines."
-            ),
+            first_text=FIRST_TEXT + NORMAL_ARCADE_ASCII,
+            text=NORMAL_ARCADE_ASCII + NORMAL_ARCADE,
             options=[
                 Option("Walk out of the arcade", "outside"),
                 Option("Look at the poster", action=read_poster),

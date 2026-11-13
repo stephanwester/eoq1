@@ -165,9 +165,9 @@ def flicker(times=2):
     s = screen.current
     for _ in range(times):
         s.write("\x1b[?5h")  # screen colors reversed
-        s.sleep(0.2)
+        s.sleep(0.1)
         s.write("\x1b[?5l")  # back to normal
-        s.sleep(0.5)
+        s.sleep(0.25)
 
 
 def static(seconds=1.0):

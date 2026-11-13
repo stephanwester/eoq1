@@ -26,8 +26,6 @@ Just a nightmare...
 Then, from underneath your bed, a familiar voice whispers:
 
 "Silly... silly..."
-
-[JUMPSCARE]
 """
 
 GOOD_ENDING = """
@@ -52,6 +50,20 @@ Suddenly, you hear a little girl giggling.
 "Hihi... silly!"
 
 The screen fades to black.
+"""
+
+NO_ENDING = """
+You didn't even try.
+
+The arcade machines flicker one last time.
+
+A little girl giggles somewhere in the distance.
+
+"Already giving up?"
+
+The exit door slowly disappears.
+
+Looks like you're staying here forever...
 """
 
 
@@ -427,14 +439,13 @@ class Game:
 
 
 def _show_end(ending):
-    # TODO add custom endings
     say()
     if ending == "lose":
         say(BAD_ENDING)
     elif ending == "win":
         say(GOOD_ENDING)
     else:
-        say("[blood]THE END[/]", speed=0.08)
+        say(NO_ENDING)
     say()
     pause("Press Enter to leave...")
     return ending

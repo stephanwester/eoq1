@@ -5,6 +5,7 @@ import random
 from textquest.effects import jumpscare
 import sys
 
+MUSIC = Path(__file__).parent / "media" / "radmusic.mp3"
 JUMPSCARE = Path(__file__).parent / "media" / "scream.mp3"
 IMAGE = Path(__file__).parent / "media" / "hello-kitty.png"
 WIDTH = 640
@@ -35,7 +36,11 @@ def make_game():
     display = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Wheel of Kitty")
     pygame.init()
+    pygame.mixer.init()
 
+    pygame.mixer.music.load(MUSIC)
+    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.play(-1)
     # values of rotation
     surf = pygame.Surface((400, 400))
     surf.fill((0, 0, 0, 0))
@@ -105,7 +110,8 @@ def make_game():
                     return True
                 jumpscare(sound=JUMPSCARE)
                 pygame.time.delay(1000)
-    
+
+    pygame.mixer.music.stop()
     pygame.quit()
     return False
 

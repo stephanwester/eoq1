@@ -14,14 +14,10 @@ from examples.shoot_the_pies import make_game as make_game3
 from textquest.sound import play_sound
 from pathlib import Path
 
-<<<<<<< HEAD
 MUSIC = Path(__file__).parent / "examples" / "media" / "background.mp3"
-=======
 
 TIME_SECONDS = 30
->>>>>>> 637eec61806e6daccb56954ac5a258430ecfb859
 KEYS_NEEDED = 2
-TIME_SECONDS = 30
 
 SNAKE_INTRO = """
 Welcome to the Cursed Snake Game...
@@ -41,6 +37,7 @@ Welcome to the Wheel of Misfortune!
 One spin. Only one way to win.
 
 Feeling lucky?
+81e54553d7ccaf6877f3f1de7fac5fef26a
 
 Don't worry, Kitty is rooting for you...
 
@@ -143,7 +140,6 @@ SAFE_ASCII = """
                                          
 """
 
-<<<<<<< HEAD
 SAFE_TEXT = """
 You inspect the safe and see a num pad where you can enter a 3 digit code.
 There is a sticky note next to it
@@ -153,14 +149,6 @@ NOTE_TEXT = '\"If you forgot the code to the safe, just solve the riddles\"'
 
 
 POSTER = """
-=======
-# functions
-
-
-def read_poster(game):
-    say(
-        """
->>>>>>> 637eec61806e6daccb56954ac5a258430ecfb859
     _________________________________
    |                                 |
    |      WELCOME TO THE ARCADE!     |
@@ -172,8 +160,6 @@ def read_poster(game):
    |  And stay and play forever.     |
    |                                 |
    |_________________________________|
-   
-<<<<<<< HEAD
 """
 
 
@@ -189,12 +175,6 @@ def read_documents(game):
 def read_note(game):
     say("The note reads:\n" + NOTE_TEXT)
 
-=======
-""",
-        speed=0.05,
-    )
-    
->>>>>>> 637eec61806e6daccb56954ac5a258430ecfb859
 
 def insert_coin(game, game_number):
     beat_flag = f"beat_game{game_number}"
@@ -392,30 +372,11 @@ def main_game():
             options=[
                 Option("Explore the secret room", action=enter_secret_room, condition=lambda game: bool(not game.get("secret_explored"))),
                 Option("Return to the arcade", "arcade"),
-<<<<<<< HEAD
                 Option("Look at the table", action=table, condition=lambda game: bool(game.get("secret_explored")), once=True),
                 Option("Look at riddle 1", action=riddle1, condition=lambda game: bool(game.get("secret_explored"))),
                 Option("Look at riddle 2", action=riddle2, condition=lambda game: bool(game.get("secret_explored"))),
                 Option("Look at riddle 3", action=riddle3, condition=lambda game: bool(game.get("secret_explored"))),
                 Option("Look at the safe", "safe", condition=lambda game: bool(game.get("secret_explored"))),
-=======
-                # Option("Look at the table", action=table, condition=lambda game: bool(game.get("secret_explored"))),
-                Option(
-                    "Look at riddle 1",
-                    action=riddle1,
-                    condition=lambda game: bool(game.get("secret_explored")),
-                ),
-                Option(
-                    "Look at riddle 2",
-                    action=riddle2,
-                    condition=lambda game: bool(game.get("secret_explored")),
-                ),
-                Option(
-                    "Look at riddle 3",
-                    action=riddle3,
-                    condition=lambda game: bool(game.get("secret_explored")),
-                ),
->>>>>>> 637eec61806e6daccb56954ac5a258430ecfb859
             ],
         )
     )
